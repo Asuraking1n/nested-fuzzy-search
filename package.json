@@ -1,0 +1,36 @@
+{
+  "name": "nested-fuzzy-search",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "fuzzy-search",
+    "search",
+    "nested-data",
+    "nested-objects",
+    "nested-arrays",
+    "levenshtein",
+    "similarity",
+    "object-search",
+    "array-search",
+    "custom-search",
+    "recursive-search",
+    "data-processing",
+    "deep-search",
+    "string-matching",
+    "javascript",
+    "typescript"
+  ],
+  "author": "Nishant Kumar Tiwari",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.26.3",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0"
+  }
+}
