@@ -1,4 +1,3 @@
-
 # Nested Fuzzy Search
 
 [![npm version](https://badge.fury.io/js/nested-fuzzy-search.svg)](https://www.npmjs.com/package/nested-fuzzy-search)
@@ -31,7 +30,7 @@ npm install nested-fuzzy-search
 Using ES6 imports:
 
 ```javascript
-import { search } from 'nested-fuzzy-search';
+import { search } from "nested-fuzzy-search";
 ```
 
 ### Example
@@ -39,7 +38,7 @@ import { search } from 'nested-fuzzy-search';
 Here’s how you can use `nested-fuzzy-search` to perform a fuzzy search on nested data:
 
 ```javascript
-import { search } from 'nested-fuzzy-search';
+import { search } from "nested-fuzzy-search";
 
 const data = {
   id: 1,
@@ -78,9 +77,7 @@ console.log(results);
 ### Output
 
 ```javascript
-[
-  { path: ".details.meta.author.name", value: "John Doe", score: 1 },
-]
+[{ path: ".details.meta.author.name", value: "John Doe", score: 1 }];
 ```
 
 - CodeSandbox: [https://codesandbox.io/p/sandbox/sdrf7z?file=%2Fsrc%2FApp.js](Live)
@@ -92,17 +89,21 @@ console.log(results);
 Performs a fuzzy search on the provided nested data.
 
 #### Parameters:
+
 - **`data`**: The nested object or array to search.
 - **`query`**: The search string.
 - **`threshold`**: The minimum similarity score (default: `0.6`).
 
 #### Returns:
+
 An array of results, each containing:
+
 - `path`: The path to the matched value.
 - `value`: The matched string.
 - `score`: The similarity score.
 
 ### How it Works
+
 1. The library flattens the nested structure into a list of paths and string values.
 2. It calculates the similarity score between the query and each string value using the Levenshtein distance.
 3. Results with scores above the threshold are returned, sorted by relevance.
@@ -118,6 +119,7 @@ npm test
 ## Contributing
 
 Contributions are welcome! If you’d like to improve this package, please:
+
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature-name`).
 3. Commit your changes (`git commit -m 'Add new feature'`).
@@ -135,12 +137,12 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Support
 
-If you encounter any issues or have questions, feel free to open an [issue](https://github.com/your-username/nested-fuzzy-search/issues) on GitHub.
+If you encounter any issues or have questions, feel free to open an [issue](https://github.com/Asuraking1n/nested-fuzzy-search/issues) on GitHub.
 
 ## Connect
 
-- GitHub: [https://github.com/Asuraking1n](GitHub)
-- LinkedIn: [https://www.linkedin.com/in/nishant-kumar-tiwari-253a46196/](LinkedIn)
+- GitHub: [<img src="https://img.shields.io/badge/-GitHub-white?style=social&logo=github&logoColor=black"  height="30"/>](https://github.com/Asuraking1n)
+- LinkedIn: [<img src="https://img.shields.io/badge/-LinkedIn-white?style=social&logo=linkedin&logoColor=blue"  height="30"/>](https://www.linkedin.com/in/nishant-kumar-tiwari-253a46196/)
 
 
 ---
