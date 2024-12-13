@@ -1,3 +1,4 @@
+
 # Nested Fuzzy Search
 
 [![npm version](https://badge.fury.io/js/nested-fuzzy-search.svg)](https://www.npmjs.com/package/nested-fuzzy-search)
@@ -79,9 +80,10 @@ console.log(results);
 ```javascript
 [
   { path: ".details.meta.author.name", value: "John Doe", score: 1 },
-  { path: ".name", value: "Root Level", score: 0.3 }
 ]
 ```
+
+- CodeSandbox: [https://codesandbox.io/p/sandbox/sdrf7z?file=%2Fsrc%2FApp.js](Live)
 
 ## API
 
@@ -134,6 +136,12 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Support
 
 If you encounter any issues or have questions, feel free to open an [issue](https://github.com/your-username/nested-fuzzy-search/issues) on GitHub.
+
+## Connect
+
+- GitHub: [https://github.com/Asuraking1n](GitHub)
+- LinkedIn: [https://www.linkedin.com/in/nishant-kumar-tiwari-253a46196/](LinkedIn)
+
 
 ---
 
