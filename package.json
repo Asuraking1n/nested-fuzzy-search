@@ -1,12 +1,21 @@
 {
   "name": "nested-fuzzy-search",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "type": "module",
+  "types": "types/nested-fuzzy-search.d.ts",
   "main": "src/index.js",
   "scripts": {
     "test": "jest"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Asuraking1n/nested-fuzzy-search.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Asuraking1n/nested-fuzzy-search/issues"
+  },
+  "homepage": "https://github.com/Asuraking1n/nested-fuzzy-search/blob/main/README.md",
   "keywords": [
     "fuzzy-search",
     "search",
