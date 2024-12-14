@@ -1,4 +1,3 @@
-
 // Levenshtein algorithm
 function calculateLevenshtein(a, b) {
   const matrix = Array.from({ length: a.length + 1 }, () =>
@@ -22,6 +21,10 @@ function calculateLevenshtein(a, b) {
 }
 
 function similarityScore(a, b) {
+  // a and b should be strings before calculating Levenshtein
+  if (typeof a !== "string" || typeof b !== "string") {
+    return 0;
+  }
   const distance = calculateLevenshtein(a, b);
   return 1 - distance / Math.max(a.length, b.length);
 }
@@ -42,9 +45,26 @@ function extractText(data, path = "") {
   return results;
 }
 
-function search(data, query, threshold = 0.6) {
-  const flatData = extractText(data);
+// Function to handle array input
+function searchInArray(data, query, threshold) {
+  return data
+    .map((item, index) => {
+      const flatData = extractText(item, `[${index}]`);
+      const matches = flatData
+        .map(({ path, value }) => {
+          const score = similarityScore(value, query);
+          return { path, value, score };
+        })
+        .filter((result) => result.score >= threshold)
+        .sort((a, b) => b.score - a.score);
+      return matches.length > 0 ? { index, originalData: item, matches } : null;
+    })
+    .filter((result) => result !== null);
+}
 
+// Function to handle object input
+function searchInObject(data, query, threshold) {
+  const flatData = extractText(data);
   return flatData
     .map(({ path, value }) => {
       const score = similarityScore(value, query);
@@ -52,6 +72,16 @@ function search(data, query, threshold = 0.6) {
     })
     .filter((result) => result.score >= threshold)
     .sort((a, b) => b.score - a.score);
+}
+
+// Main search function
+function search(data, query, threshold = 0.6) {
+  if (Array.isArray(data)) {
+    return searchInArray(data, query, threshold);
+  } else if (data && typeof data === "object") {
+    return searchInObject(data, query, threshold);
+  }
+  return [];
 }
 
 export { search };
