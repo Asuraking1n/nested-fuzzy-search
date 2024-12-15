@@ -75,8 +75,16 @@ function searchInObject(data, query, threshold) {
 }
 
 // Main search function
-function search(data, query, threshold = 0.6) {
-  if (Array.isArray(data)) {
+function search(
+  data,
+  query,
+  options = {
+    threshold: 0.6,
+    outputMode: "flat",
+  }
+) {
+  const { threshold, outputMode } = options;
+  if (Array.isArray(data) && outputMode === "tree") {
     return searchInArray(data, query, threshold);
   } else if (data && typeof data === "object") {
     return searchInObject(data, query, threshold);

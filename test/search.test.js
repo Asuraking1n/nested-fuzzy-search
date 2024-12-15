@@ -44,7 +44,10 @@ const simpleNestedObject = {
 describe("Search Function Tests", () => {
   test('Search in deeply nested array for a query "level 3"', () => {
     const query = "level 3";
-    const results = search(simpleNestedArray, query, 0.3);
+    const results = search(simpleNestedArray, query, {
+      threshold: 0.3,
+      outputMode: "tree",
+    });
 
     // Check for at least one result in Parent 1
     expect(results.length).toBeGreaterThan(0);
@@ -58,7 +61,9 @@ describe("Search Function Tests", () => {
 
   test('Search in nested object for a query "level 3"', () => {
     const query = "level 3";
-    const results = search(simpleNestedObject, query, 0.3);
+    const results = search(simpleNestedObject, query, {
+      threshold: 0.3,
+    });
 
     // Check for at least one result in Parent 1
     expect(results.length).toBeGreaterThan(0);

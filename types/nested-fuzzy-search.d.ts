@@ -9,6 +9,9 @@ declare module "nested-fuzzy-search" {
   export function search(
     data: any, // data can now be either an object or an array
     query: string,
-    threshold?: number
+    options?: {
+      threshold?: number;
+      outputMode?: "flat" | "tree";
+    }
   ): SearchResult[];
 }
