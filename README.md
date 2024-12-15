@@ -150,7 +150,7 @@ console.log(results);
 ];
 ```
 
-- CodeSandbox: [https://codesandbox.io/p/sandbox/sdrf7z?file=%2Fsrc%2FApp.js](Live)
+- CodeSandbox: [Live](https://codesandbox.io/p/sandbox/sdrf7z?file=%2Fsrc%2FApp.js)
 
 ## API
 
