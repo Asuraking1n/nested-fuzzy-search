@@ -33,9 +33,9 @@ Using ES6 imports:
 import { search } from "nested-fuzzy-search";
 ```
 
-### Example
+### Example with Object
 
-Here’s how you can use `nested-fuzzy-search` to perform a fuzzy search on nested data:
+Here’s how you can use `nested-fuzzy-search` to perform a fuzzy search on a nested object:
 
 ```javascript
 import { search } from "nested-fuzzy-search";
@@ -71,16 +71,86 @@ const query = "John";
 const threshold = 0.5; // Minimum similarity score
 
 const results = search(data, query, threshold);
+
 console.log(results);
 ```
 
 ### Output
 
 ```javascript
-[{ path: ".details.meta.author.name", value: "John Doe", score: 1 }];
+[{ path: ".details.meta.author.name", value: "John Doe", score: 0.5 }];
 ```
 
-- CodeSandbox: [https://codesandbox.io/p/sandbox/sdrf7z?file=%2Fsrc%2FApp.js](Live)
+### Example with Array
+
+Here’s an example using `nested-fuzzy-search` with a deeply nested array:
+
+```javascript
+import { search } from "nested-fuzzy-search";
+
+const deeplyNestedArray = [
+  {
+    id: 1,
+    name: "Parent 1",
+    children: [
+      {
+        id: 11,
+        name: "Child 1.1",
+        children: [
+          {
+            id: 111,
+            name: "Sub-Child 1.1.1",
+            value: "Data at level 3",
+          },
+        ],
+      },
+    ],
+  },
+];
+
+const query = "Leaf";
+const threshold = 0.3;
+
+const results = search(deeplyNestedArray, query, threshold);
+
+console.log(results);
+```
+
+### Output
+
+```javascript
+[
+  {
+    index: 0,
+    originalData: {
+      id: 1,
+      name: "Parent 1",
+      children: [
+        {
+          id: 11,
+          name: "Child 1.1",
+          children: [
+            {
+              id: 111,
+              name: "Sub-Child 1.1.1",
+              value: "Data at level 3",
+            },
+          ],
+        },
+      ],
+    },
+    matches: [
+      {
+        path: "[0].children[0].children[0].value",
+        value: "Data at level 3",
+        score: 0.4666666666666667,
+      },
+    ],
+  },
+];
+```
+
+- CodeSandbox: [Live](https://codesandbox.io/p/sandbox/sdrf7z?file=%2Fsrc%2FApp.js)
 
 ## API
 
@@ -143,7 +213,6 @@ If you encounter any issues or have questions, feel free to open an [issue](http
 
 - GitHub: [<img src="https://img.shields.io/badge/-GitHub-white?style=social&logo=github&logoColor=black"  height="30"/>](https://github.com/Asuraking1n)
 - LinkedIn: [<img src="https://img.shields.io/badge/-LinkedIn-white?style=social&logo=linkedin&logoColor=blue"  height="30"/>](https://www.linkedin.com/in/nishant-kumar-tiwari-253a46196/)
-
 
 ---
 

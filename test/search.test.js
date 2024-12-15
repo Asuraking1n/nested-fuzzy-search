@@ -1,27 +1,72 @@
 import { search } from "../src";
 
-describe("search function", () => {
-  it("should return correct search results", () => {
-    const data = {
-      id: 1,
-      name: "Root Level",
-      children: [
-        {
-          id: 2,
-          name: "Level 2 - A",
-          type: "Category",
-          child: {
-            name: "John Doe",
+// Test data
+const simpleNestedArray = [
+  {
+    id: 1,
+    name: "Parent 1",
+    children: [
+      {
+        id: 11,
+        name: "Child 1.1",
+        children: [
+          {
+            id: 111,
+            name: "Sub-Child 1.1.1",
+            value: "Data at level 3",
+          },
+        ],
+      },
+    ],
+  },
+];
+
+const simpleNestedObject = {
+  parent: {
+    id: 1,
+    name: "Parent 1",
+    children: {
+      child1: {
+        id: 11,
+        name: "Child 1.1",
+        children: {
+          subChild1: {
+            id: 111,
+            name: "Sub-Child 1.1.1",
+            value: "Data at level 3",
           },
         },
-      ],
-    };
-    const query = "John Doe";
-    const results = search(data, query, 0.2);
+      },
+    },
+  },
+};
 
-    expect(results).toEqual([
-      { path: ".children[0].child.name", value: "John Doe", score: 1 },
-      { path: ".name", value: "Root Level", score: 0.30000000000000004 },
-    ]);
+describe("Search Function Tests", () => {
+  test('Search in deeply nested array for a query "level 3"', () => {
+    const query = "level 3";
+    const results = search(simpleNestedArray, query, 0.3);
+
+    // Check for at least one result in Parent 1
+    expect(results.length).toBeGreaterThan(0);
+
+    // Check the path and value
+    expect(results[0].originalData.name).toBe("Parent 1");
+    expect(results[0].matches[0].path).toBe(
+      "[0].children[0].children[0].value"
+    );
+  });
+
+  test('Search in nested object for a query "level 3"', () => {
+    const query = "level 3";
+    const results = search(simpleNestedObject, query, 0.3);
+
+    // Check for at least one result in Parent 1
+    expect(results.length).toBeGreaterThan(0);
+
+    // Check the path and value
+    expect(results[0].path).toBe(
+      ".parent.children.child1.children.subChild1.value"
+    );
+    expect(results[0].value).toBe("Data at level 3");
   });
 });
