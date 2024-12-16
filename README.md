@@ -193,7 +193,14 @@ Performs a fuzzy search on the provided nested data.
 
 - **`data`**: The nested object or array to search.
 - **`query`**: The search string.
-- **`options`**: { threshold: The minimum similarity score (default: `0.6`), outputMode: The type of output you want (default: `flat`) }.
+- **`options`**: This is an object which support multiple options.
+
+`options`:
+
+- `options` can have three values:
+  - **`threshold`**: The minimum similarity score (default: `0.6`)
+  - **`outputMode`**: The type of output you want (default: `flat`)
+  - **`excludeKeys`**: The array of keys you want to exclude (default: `[]`)
 
 #### Returns:
 
