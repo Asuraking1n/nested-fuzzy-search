@@ -12,7 +12,7 @@ const simpleNestedArray = [
         children: [
           {
             id: 111,
-            name: "Sub-Child 1.1.1",
+            name: "Sub-Child 1.1.1 level 3",
             value: "Data at level 3",
           },
         ],
@@ -44,7 +44,10 @@ const simpleNestedObject = {
 describe("Search Function Tests", () => {
   test('Search in deeply nested array for a query "level 3"', () => {
     const query = "level 3";
-    const results = search(simpleNestedArray, query, 0.3);
+    const results = search(simpleNestedArray, query, {
+      threshold: 0.3,
+      outputMode: "tree",
+    });
 
     // Check for at least one result in Parent 1
     expect(results.length).toBeGreaterThan(0);
@@ -58,7 +61,9 @@ describe("Search Function Tests", () => {
 
   test('Search in nested object for a query "level 3"', () => {
     const query = "level 3";
-    const results = search(simpleNestedObject, query, 0.3);
+    const results = search(simpleNestedObject, query, {
+      threshold: 0.3,
+    });
 
     // Check for at least one result in Parent 1
     expect(results.length).toBeGreaterThan(0);
@@ -68,5 +73,20 @@ describe("Search Function Tests", () => {
       ".parent.children.child1.children.subChild1.value"
     );
     expect(results[0].value).toBe("Data at level 3");
+  });
+
+  test('Search in deeply nested array for a query "level 3" with excludedKeys', () => {
+    const query = "level 3";
+    const results = search(simpleNestedArray, query, {
+      threshold: 0.3,
+      outputMode: "tree",
+      excludeKeys: ["value"],
+    });
+
+    // Check for at least one result in Parent 1
+    expect(results.length).toBe(1);
+
+    // Check the path and value
+    expect(results[0].matches[0].path).toBe("[0].children[0].children[0].name");
   });
 });

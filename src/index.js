@@ -29,16 +29,18 @@ function similarityScore(a, b) {
   return 1 - distance / Math.max(a.length, b.length);
 }
 
-function extractText(data, path = "") {
+function extractText(data, path = "", excludeKeys = []) {
   const results = [];
   if (Array.isArray(data)) {
     data.forEach((item, index) =>
-      results.push(...extractText(item, `${path}[${index}]`))
+      results.push(...extractText(item, `${path}[${index}]`, excludeKeys))
     );
   } else if (data && typeof data === "object") {
-    Object.entries(data).forEach(([key, value]) =>
-      results.push(...extractText(value, `${path}.${key}`))
-    );
+    Object.entries(data).forEach(([key, value]) => {
+      if (!excludeKeys.includes(key)) {
+        results.push(...extractText(value, `${path}.${key}`, excludeKeys));
+      }
+    });
   } else if (typeof data === "string") {
     results.push({ path, value: data });
   }
@@ -46,10 +48,11 @@ function extractText(data, path = "") {
 }
 
 // Function to handle array input
-function searchInArray(data, query, threshold) {
+function searchInArray(data, query, options) {
+  const { threshold, excludeKeys } = options;
   return data
     .map((item, index) => {
-      const flatData = extractText(item, `[${index}]`);
+      const flatData = extractText(item, `[${index}]`, excludeKeys);
       const matches = flatData
         .map(({ path, value }) => {
           const score = similarityScore(value, query);
@@ -63,8 +66,10 @@ function searchInArray(data, query, threshold) {
 }
 
 // Function to handle object input
-function searchInObject(data, query, threshold) {
-  const flatData = extractText(data);
+function searchInObject(data, query, options) {
+  const { threshold, excludeKeys } = options;
+  const flatData = extractText(data, "", excludeKeys);
+
   return flatData
     .map(({ path, value }) => {
       const score = similarityScore(value, query);
@@ -75,11 +80,20 @@ function searchInObject(data, query, threshold) {
 }
 
 // Main search function
-function search(data, query, threshold = 0.6) {
-  if (Array.isArray(data)) {
-    return searchInArray(data, query, threshold);
+function search(
+  data,
+  query,
+  options = {
+    threshold: 0.6,
+    outputMode: "flat",
+    excludeKeys: [],
+  }
+) {
+  const { threshold, outputMode, excludeKeys } = options;
+  if (Array.isArray(data) && outputMode === "tree") {
+    return searchInArray(data, query, { threshold, excludeKeys });
   } else if (data && typeof data === "object") {
-    return searchInObject(data, query, threshold);
+    return searchInObject(data, query, { threshold, excludeKeys });
   }
   return [];
 }

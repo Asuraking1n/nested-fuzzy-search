@@ -70,7 +70,9 @@ const data = {
 const query = "John";
 const threshold = 0.5; // Minimum similarity score
 
-const results = search(data, query, threshold);
+const results = search(data, query, {
+  threshold,
+});
 
 console.log(results);
 ```
@@ -111,7 +113,10 @@ const deeplyNestedArray = [
 const query = "Leaf";
 const threshold = 0.3;
 
-const results = search(deeplyNestedArray, query, threshold);
+const results = search(deeplyNestedArray, query, {
+  threshold,
+  outputMode: "tree",
+});
 
 console.log(results);
 ```
@@ -150,11 +155,37 @@ console.log(results);
 ];
 ```
 
+### Nested Array with outputMode: `flat`
+
+```javascript
+const query = "Leaf";
+const threshold = 0.3;
+
+const results = search(deeplyNestedArray, query, {
+  threshold,
+  outputMode: "flat",
+});
+
+console.log(results);
+```
+
+### Output
+
+```javascript
+[
+  {
+    path: "[0].children[0].children[0].value",
+    value: "Data at level 3",
+    score: 0.4666666666666667,
+  },
+];
+```
+
 - CodeSandbox: [Live](https://codesandbox.io/p/sandbox/sdrf7z?file=%2Fsrc%2FApp.js)
 
 ## API
 
-### `search(data, query, threshold = 0.6)`
+### `search(data, query, options)`
 
 Performs a fuzzy search on the provided nested data.
 
@@ -162,7 +193,14 @@ Performs a fuzzy search on the provided nested data.
 
 - **`data`**: The nested object or array to search.
 - **`query`**: The search string.
-- **`threshold`**: The minimum similarity score (default: `0.6`).
+- **`options`**: This is an object which support multiple options.
+
+`options`:
+
+- `options` can have three values:
+  - **`threshold`**: The minimum similarity score (default: `0.6`)
+  - **`outputMode`**: The type of output you want (default: `flat`)
+  - **`excludeKeys`**: The array of keys you want to exclude (default: `[]`)
 
 #### Returns:
 
