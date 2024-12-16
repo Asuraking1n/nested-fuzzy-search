@@ -12,6 +12,7 @@ declare module "nested-fuzzy-search" {
     options?: {
       threshold?: number;
       outputMode?: "flat" | "tree";
+      excludeKeys?: string[];
     }
   ): SearchResult[];
 }
