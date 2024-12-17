@@ -197,10 +197,11 @@ Performs a fuzzy search on the provided nested data.
 
 `options`:
 
-- `options` can have three values:
+- `options` can have four values:
   - **`threshold`**: The minimum similarity score (default: `0.6`)
   - **`outputMode`**: The type of output you want (default: `flat`)
   - **`excludeKeys`**: The array of keys you want to exclude (default: `[]`)
+  - **`exact`**: Its a boolean value if its true, it will strict check the query instead of similarity score (default: `false`)
 
 #### Returns:
 
