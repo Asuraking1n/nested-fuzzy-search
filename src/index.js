@@ -49,17 +49,30 @@ function extractText(data, path = "", excludeKeys = []) {
 
 // Function to handle array input
 function searchInArray(data, query, options) {
-  const { threshold, excludeKeys } = options;
+  const { threshold, excludeKeys, exact } = options;
   return data
     .map((item, index) => {
       const flatData = extractText(item, `[${index}]`, excludeKeys);
-      const matches = flatData
-        .map(({ path, value }) => {
-          const score = similarityScore(value, query);
-          return { path, value, score };
-        })
+
+      const dataWithSimilarityScore = flatData.map(({ path, value }) => {
+        const score = similarityScore(value, query);
+        return { path, value, score };
+      });
+
+      if (exact) {
+        const matches = dataWithSimilarityScore
+          .filter((result) => result.value === query)
+          .sort((a, b) => b.score - a.score);
+
+        return matches.length > 0
+          ? { index, originalData: item, matches }
+          : null;
+      }
+
+      const matches = dataWithSimilarityScore
         .filter((result) => result.score >= threshold)
         .sort((a, b) => b.score - a.score);
+
       return matches.length > 0 ? { index, originalData: item, matches } : null;
     })
     .filter((result) => result !== null);
@@ -67,14 +80,21 @@ function searchInArray(data, query, options) {
 
 // Function to handle object input
 function searchInObject(data, query, options) {
-  const { threshold, excludeKeys } = options;
+  const { threshold, excludeKeys, exact } = options;
   const flatData = extractText(data, "", excludeKeys);
 
-  return flatData
-    .map(({ path, value }) => {
-      const score = similarityScore(value, query);
-      return { path, value, score };
-    })
+  const dataWithSimilarityScore = flatData.map(({ path, value }) => {
+    const score = similarityScore(value, query);
+    return { path, value, score };
+  });
+
+  if (exact) {
+    return dataWithSimilarityScore
+      .filter((result) => result.value === query)
+      .sort((a, b) => b.score - a.score);
+  }
+
+  return dataWithSimilarityScore
     .filter((result) => result.score >= threshold)
     .sort((a, b) => b.score - a.score);
 }
@@ -87,13 +107,14 @@ function search(
     threshold: 0.6,
     outputMode: "flat",
     excludeKeys: [],
+    exact: false,
   }
 ) {
-  const { threshold, outputMode, excludeKeys } = options;
+  const { threshold, outputMode, excludeKeys, exact } = options;
   if (Array.isArray(data) && outputMode === "tree") {
-    return searchInArray(data, query, { threshold, excludeKeys });
+    return searchInArray(data, query, { threshold, excludeKeys, exact });
   } else if (data && typeof data === "object") {
-    return searchInObject(data, query, { threshold, excludeKeys });
+    return searchInObject(data, query, { threshold, excludeKeys, exact });
   }
   return [];
 }

@@ -13,6 +13,7 @@ declare module "nested-fuzzy-search" {
       threshold?: number;
       outputMode?: "flat" | "tree";
       excludeKeys?: string[];
+      exact?: boolean;
     }
   ): SearchResult[];
 }
