@@ -1,5 +1,5 @@
 // Levenshtein algorithm
-export function calculateLevenshtein(a, b) {
+function calculateLevenshtein(a, b) {
   const matrix = Array.from({ length: a.length + 1 }, () =>
     Array(b.length + 1).fill(0)
   );
@@ -20,7 +20,7 @@ export function calculateLevenshtein(a, b) {
   return matrix[a.length][b.length];
 }
 
-export function similarityScore(a, b) {
+function similarityScore(a, b) {
   // a and b should be strings before calculating Levenshtein
   if (typeof a !== "string" || typeof b !== "string") {
     return 0;
@@ -29,7 +29,7 @@ export function similarityScore(a, b) {
   return 1 - distance / Math.max(a.length, b.length);
 }
 
-export function extractText(data, path = "", excludeKeys = []) {
+function extractText(data, path = "", excludeKeys = []) {
   const results = [];
   if (Array.isArray(data)) {
     data.forEach((item, index) =>
@@ -98,3 +98,79 @@ export function searchInObject(data, query, options) {
     .filter((result) => result.score >= threshold)
     .sort((a, b) => b.score - a.score);
 }
+
+//Streaming functions
+
+async function* extractTextStream(data, path = "", excludeKeys = []) {
+  if (Array.isArray(data)) {
+    for (let index = 0; index < data.length; index++) {
+      yield* extractTextStream(data[index], `${path}[${index}]`, excludeKeys);
+    }
+  } else if (data && typeof data === "object") {
+    for (const [key, value] of Object.entries(data)) {
+      if (!excludeKeys.includes(key)) {
+        yield* extractTextStream(value, `${path}.${key}`, excludeKeys);
+      }
+    }
+  } else if (typeof data === "string") {
+    yield { path, value: data };
+  }
+}
+
+export async function* searchInArrayStream(data, query, options) {
+  const { threshold, excludeKeys, exact } = options;
+  for (let index = 0; index < data.length; index++) {
+    const item = data[index];
+    const flatData = [];
+    for await (const extracted of extractTextStream(
+      item,
+      `[${index}]`,
+      excludeKeys
+    )) {
+      flatData.push(extracted);
+    }
+
+    const dataWithSimilarityScore = flatData.map(({ path, value }) => {
+      const score = similarityScore(value, query);
+      return { path, value, score };
+    });
+
+    let matches;
+    if (exact) {
+      matches = dataWithSimilarityScore
+        .filter((result) => result.value === query)
+        .sort((a, b) => b.score - a.score);
+    } else {
+      matches = dataWithSimilarityScore
+        .filter((result) => result.score >= threshold)
+        .sort((a, b) => b.score - a.score);
+    }
+
+    if (matches.length > 0) {
+      yield { index, originalData: item, matches };
+    }
+  }
+}
+
+export async function* searchInObjectStream(data, query, options) {
+  const { threshold, excludeKeys, exact } = options;
+
+  const flatData = [];
+  for await (const extracted of extractTextStream(data, "", excludeKeys)) {
+    flatData.push(extracted);
+  }
+
+  for (const { path, value } of flatData) {
+    const score = similarityScore(value, query);
+    if (exact) {
+      if (value === query) {
+        yield { path, value, score };
+      }
+    } else {
+      if (score >= threshold) {
+        yield { path, value, score };
+      }
+    }
+  }
+}
+
