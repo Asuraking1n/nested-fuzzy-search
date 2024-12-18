@@ -11,6 +11,7 @@
 
 - Recursive search through nested objects and arrays.
 - Fuzzy matching using the Levenshtein distance algorithm.
+- Result streaming options for large dataset.
 - Customizable similarity threshold.
 - Easy integration with JavaScript and TypeScript projects.
 - Lightweight and dependency-free.
@@ -181,6 +182,72 @@ console.log(results);
 ];
 ```
 
+### `searchStream` result output via streaming
+
+```javascript
+import { searchStream } from "nested-fuzzy-search";
+
+async function runSearch() {
+  console.time("Streaming Test");
+
+  const simpleNestedArray = [
+    {
+      id: 1,
+      name: "Parent 1",
+      children: [
+        {
+          id: 11,
+          name: "Child 1.1, level",
+          children: [
+            {
+              id: 111,
+              name: "Sub-Child 1.1.1 level 3",
+              value: "Data at level 3",
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
+  const query = "level";
+  const options = { threshold: 0.2, outputMode: "flat", exact: false };
+
+  console.log("Start streaming results...");
+
+  for await (const result of searchStream(simpleNestedArray, query, options)) {
+    console.log("Received result:", result);
+    await new Promise((r) => setTimeout(r, 500)); // Simulate processing delay
+  }
+
+  console.timeEnd("Streaming Test");
+}
+
+runSearch();
+```
+
+### Output
+
+```javascript
+Start streaming results...
+Received result: {
+  path: '[0].children[0].name',
+  value: 'Child 1.1, level',
+  score: 0.3125
+}
+Received result: {
+  path: '[0].children[0].children[0].name',
+  value: 'Sub-Child 1.1.1 level 3',
+  score: 0.21739130434782605
+}
+Received result: {
+  path: '[0].children[0].children[0].value',
+  value: 'Data at level 3',
+  score: 0.33333333333333337
+}
+Streaming Test: 1.511s
+```
+
 - CodeSandbox: [Live](https://codesandbox.io/p/sandbox/sdrf7z?file=%2Fsrc%2FApp.js)
 
 ## API
@@ -188,6 +255,10 @@ console.log(results);
 ### `search(data, query, options)`
 
 Performs a fuzzy search on the provided nested data.
+
+### `searchStream(data, query, options)`
+
+Performs a fuzzy search on the provided nested data and return result via streaming.
 
 #### Parameters:
 

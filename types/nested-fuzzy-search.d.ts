@@ -5,15 +5,24 @@ declare module "nested-fuzzy-search" {
     score: number;
   }
 
-  // Updated search function type definition to support both arrays and objects
+  interface SearchOptions {
+    threshold?: number;
+    outputMode?: "flat" | "tree";
+    excludeKeys?: string[];
+    exact?: boolean;
+  }
+
+  // Synchronous search function
   export function search(
-    data: any, // data can now be either an object or an array
+    data: any, // Can be an object or an array
     query: string,
-    options?: {
-      threshold?: number;
-      outputMode?: "flat" | "tree";
-      excludeKeys?: string[];
-      exact?: boolean;
-    }
+    options?: SearchOptions
   ): SearchResult[];
+
+  // Asynchronous streaming search function (returns an async iterable)
+  export function searchStream(
+    data: any, // Can be an object or an array
+    query: string,
+    options?: SearchOptions
+  ): AsyncGenerator<SearchResult, void, unknown>;
 }
